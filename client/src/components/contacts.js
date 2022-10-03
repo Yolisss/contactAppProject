@@ -30,87 +30,86 @@ const reducer = (state, action) => {
       return { ...state, notes: action.payload };
 
     case "clearForm":
-      return { id: "", nick_name: "", species_id: "", seen_on: "" };
+      return { id: "", name: "", email: "", phone: "", notes: "" };
     //basically an else statement
     default:
       return state;
   }
 };
 
-const Individuals = () => {
+const Contacts = () => {
   //[] allows us to store multiple values
-  const [individuals, setIndividuals] = useState([]);
+  const [contacts, setContacts] = useState([]);
 
   //get individuals data table
-  const getIndividuals = async () => {
-    const response = await fetch(`http://localhost:8080/individuals`);
+  const getContacts = async () => {
+    const response = await fetch(`http://localhost:8080/contacts`);
     const data = await response.json();
     console.log(data);
-    setIndividuals(data);
+    setContacts(data);
   };
 
   useEffect(() => {
-    getIndividuals();
+    getContacts();
   }, []);
 
   //initialistate of the form will be empty
   const initialState = {
     id: "",
-    nick_name: "",
-    individuals_id: "",
-    seen_on: "",
+    name: "",
+    email: "",
+    phone: "",
+    notes: "",
   };
 
   //dispatch is initiate the reducer function; reducer is a callback
   const [state, dispatch] = useReducer(reducer, initialState);
   console.log(state);
 
-  const handleAddIndividual = async (e) => {
+  const handleAddContact = async (e) => {
     e.preventDefault();
 
-    const newIndividual = {
+    const newContact = {
       id: state.id,
-      nick_name: state.nick_name,
-      species_id: state.species_id,
-      seen_on: state.seen_on,
+      name: state.name,
+      email: state.email,
+      phone: state.phone,
+      notes: state.notes,
     };
-    console.log(newIndividual);
+    console.log(newContact);
     //New Indiv data will be sent to server and new data will be posted
-    const response = await fetch("http://localhost:8080/individuals", {
+    const response = await fetch("http://localhost:8080/contacts", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newIndividual),
+      body: JSON.stringify(newContact),
     });
     const content = await response.json();
-    setIndividuals([...individuals, content]);
+    setContacts([...contacts, content]);
     //calling a specific part of your reducer type
     //whenever we press submit, all the values in the boxes will be cleared
     dispatch({ type: "clearForm" });
   };
 
   //delete individual handler
-  const handleDeleteIndividual = async (deleteId) => {
+  const handleDeleteContact = async (deleteId) => {
     //
-    const response = await fetch(
-      `http://localhost:8080/individuals/${deleteId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`http://localhost:8080/contacts/${deleteId}`, {
+      method: "DELETE",
+    });
     await response.json();
-    const deleteIndividualFunction = individuals.filter(
-      (individual) => individual.id !== deleteId
+    const deleteContactFunction = contacts.filter(
+      (contact) => contact.id !== deleteId
     );
-    setIndividuals(deleteIndividualFunction);
+    setContacts(deleteContactFunction);
   };
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <>
-      <header> Individuals Data Table </header>
+      <header> Contact List </header>
       <br></br>
       <input
         type="text"
@@ -122,35 +121,28 @@ const Individuals = () => {
       <table>
         <thead>
           <th>ID: </th>
-          <th>Nickname: </th>
-          <th>Seen On: </th>
-          <th>Species ID: </th>
+          <th>Name: </th>
+          <th>Email: </th>
+          <th>Phone: </th>
+          <th>Notes: </th>
         </thead>
         <tbody>
-          {individuals
+          {contacts
             .filter((val) => {
               if (searchTerm === "") {
                 return val;
               } else if (
-                val.nick_name.toLowerCase().includes(searchTerm.toLowerCase())
+                val.name.toLowerCase().includes(searchTerm.toLowerCase())
               ) {
                 return val;
               } else if (
-                val.seen_on
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchTerm.toString().toLowerCase())
+                val.email.toLowerCase().includes(searchTerm.toLowerCase())
               ) {
                 return val;
-              } else if (
-                val.species_id
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchTerm.toString().toLowerCase())
-              ) {
+              } else if (val.phone.toString().includes(searchTerm.toString())) {
                 return val;
               } else if (
-                val.id
+                val.notes
                   .toString()
                   .toLowerCase()
                   .includes(searchTerm.toString().toLowerCase())
@@ -158,19 +150,20 @@ const Individuals = () => {
                 return val;
               }
             })
-            .map((individual, index) => {
+            .map((contact, index) => {
               return (
                 <tr key={index}>
-                  <td>{individual.id}</td>
-                  <td>{individual.nick_name}</td>
-                  <td>{individual.seen_on}</td>
-                  <td>{individual.species_id}</td>
+                  <td>{contact.id}</td>
+                  <td>{contact.name}</td>
+                  <td>{contact.email}</td>
+                  <td>{contact.phone}</td>
+                  <td>{contact.notes}</td>
                   <td>
                     <button
                       // src={deleteIcon}
                       className="trash"
                       alt="trash"
-                      onClick={() => handleDeleteIndividual(individual.id)}
+                      onClick={() => handleDeleteContact(contact.id)}
                     >
                       Delete
                     </button>
@@ -181,18 +174,18 @@ const Individuals = () => {
         </tbody>
       </table>
 
-      <div className="addIndividuals">
-        <header>Add a new Individual</header>
+      <div className="addContacts">
+        <header>Add a new Contact</header>
         <br></br>
-        <form id="add-individuals" action="#" onSubmit={handleAddIndividual}>
+        <form id="add-contacts" action="#" onSubmit={handleAddContact}>
           <fieldset>
             <br></br>
             <label>ID: </label>
             <br></br>
             <input
               type="number"
-              id="add-individuals-id"
-              placeholder="Individuals ID"
+              id="add-contacts-id"
+              placeholder="Contacts ID"
               value={state.id}
               onChange={(e) =>
                 dispatch({
@@ -202,46 +195,46 @@ const Individuals = () => {
               }
             />
             <br></br>
-            <label>Nick Name: </label>
+            <label>Name: </label>
             <br></br>
             <input
               type="text"
-              id="add-individuals-nick_name"
-              placeholder="Nick Name"
-              value={state.nick_name}
+              id="add-contacts-name"
+              placeholder="Name"
+              value={state.name}
               onChange={(e) =>
                 dispatch({
-                  type: "editNickName",
+                  type: "editName",
                   payload: e.target.value,
                 })
               }
             />
             <br></br>
-            <label>Species Id: </label>
+            <label>Email: </label>
             <br></br>
             <input
-              type="number"
-              id="add-individuals-speciesId"
-              placeholder="species ID"
-              value={state.species_id}
+              type="text"
+              id="add-contacts-email"
+              placeholder="email"
+              value={state.email}
               onChange={(e) =>
                 dispatch({
-                  type: "editSpeciesId",
+                  type: "editEmail",
                   payload: e.target.value,
                 })
               }
             />
             <br></br>
-            <label>Seen on: </label>
+            <label>Phone: </label>
             <br></br>
             <input
-              type="datetime-local"
-              id="add-individuals-seenOn"
+              type="numbrt"
+              id="add-contacts-phone"
               placeholder=""
-              value={state.seen_on}
+              value={state.phone}
               onChange={(e) =>
                 dispatch({
-                  type: "editSeenOn",
+                  type: "editPhone",
                   payload: e.target.value,
                 })
               }
@@ -255,4 +248,4 @@ const Individuals = () => {
   );
 };
 
-export default Individuals;
+export default Contacts;
