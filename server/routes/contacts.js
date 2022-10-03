@@ -27,6 +27,7 @@ router.post("/", async (req, res) => {
   const contacts = {
     //server targetting these values
     id: req.body.id,
+    name: req.body.name,
     email: req.body.email,
     phone: req.body.phone,
     notes: req.body.notes,
@@ -35,10 +36,16 @@ router.post("/", async (req, res) => {
   //try is inserting it into our db
   try {
     const createdContacts = await db.one(
-      `INSERT INTO individuals(id, email, phone, notes) VALUES($1, $2, $3, $4) RETURNING *`,
-      [contacts.id, contacts.email, contacts.phone, contacts.notes]
+      `INSERT INTO contacts(id, name, email, phone, notes) VALUES($1, $2, $3, $4, $5) RETURNING *`,
+      [
+        contacts.id,
+        contacts.name,
+        contacts.email,
+        contacts.phone,
+        contacts.notes,
+      ]
     );
-    console.log(req.body);
+    console.log(createdContacts);
     //it'll be added to database
     res.send(createdContacts);
     //if you can't, return an error

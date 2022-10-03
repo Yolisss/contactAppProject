@@ -13,7 +13,7 @@ const reducer = (state, action) => {
   //telling reducer we need an action to do the following:
   switch (action.type) {
     case "editID":
-      console.log("Logged if the editName action is being dispatched");
+      console.log("Logged if the editID action is being dispatched");
       //payload: info used to modify your state
       return { ...state, id: action.payload };
 
@@ -43,7 +43,7 @@ const Contacts = () => {
 
   //get individuals data table
   const getContacts = async () => {
-    const response = await fetch(`http://localhost:8080/contacts`);
+    const response = await fetch(`http://localhost:8084/contacts`);
     const data = await response.json();
     console.log(data);
     setContacts(data);
@@ -78,7 +78,7 @@ const Contacts = () => {
     };
     console.log(newContact);
     //New Indiv data will be sent to server and new data will be posted
-    const response = await fetch("http://localhost:8080/contacts", {
+    const response = await fetch("http://localhost:8084/contacts", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -96,7 +96,7 @@ const Contacts = () => {
   //delete individual handler
   const handleDeleteContact = async (deleteId) => {
     //
-    const response = await fetch(`http://localhost:8080/contacts/${deleteId}`, {
+    const response = await fetch(`http://localhost:8084/contacts/${deleteId}`, {
       method: "DELETE",
     });
     await response.json();
