@@ -215,7 +215,7 @@ const Contacts = () => {
             <input
               type="text"
               id="add-contacts-email"
-              placeholder="email"
+              placeholder="Email"
               value={state.email}
               onChange={(e) =>
                 dispatch({
@@ -228,13 +228,28 @@ const Contacts = () => {
             <label>Phone: </label>
             <br></br>
             <input
-              type="numbrt"
+              type="text"
               id="add-contacts-phone"
-              placeholder=""
+              placeholder="Phone"
               value={state.phone}
               onChange={(e) =>
                 dispatch({
                   type: "editPhone",
+                  payload: e.target.value,
+                })
+              }
+            />
+            <br></br>
+            <label>Notes: </label>
+            <br></br>
+            <input
+              type="text"
+              id="add-contacts-notes"
+              placeholder="Notes:)"
+              value={state.notes}
+              onChange={(e) =>
+                dispatch({
+                  type: "editNotes",
                   payload: e.target.value,
                 })
               }
