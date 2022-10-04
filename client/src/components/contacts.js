@@ -37,7 +37,8 @@ const reducer = (state, action) => {
   }
 };
 
-const Contacts = () => {
+//parent component passing prop to child component
+const Contacts = ({ setUserToDisplay }) => {
   //[] allows us to store multiple values
   const [contacts, setContacts] = useState([]);
 
@@ -122,9 +123,9 @@ const Contacts = () => {
         <thead>
           <th>ID: </th>
           <th>Name: </th>
-          <th>Email: </th>
+          {/* <th>Email: </th>
           <th>Phone: </th>
-          <th>Notes: </th>
+          <th>Notes: </th> */}
         </thead>
         <tbody>
           {contacts
@@ -154,10 +155,16 @@ const Contacts = () => {
               return (
                 <tr key={index}>
                   <td>{contact.id}</td>
-                  <td>{contact.name}</td>
-                  <td>{contact.email}</td>
+                  <td
+                    onClick={() => {
+                      setUserToDisplay(contact);
+                    }}
+                  >
+                    {contact.name}
+                  </td>
+                  {/* <td>{contact.email}</td>
                   <td>{contact.phone}</td>
-                  <td>{contact.notes}</td>
+                  <td>{contact.notes}</td> */}
                   <td>
                     <button
                       // src={deleteIcon}
@@ -174,8 +181,10 @@ const Contacts = () => {
         </tbody>
       </table>
 
+      <br></br>
+
       <div className="addContacts">
-        <header>Add a new Contact</header>
+        <header className="add-contact-header">Add a new Contact</header>
         <br></br>
         <form id="add-contacts" action="#" onSubmit={handleAddContact}>
           <fieldset>
@@ -215,7 +224,7 @@ const Contacts = () => {
             <input
               type="text"
               id="add-contacts-email"
-              placeholder="Email"
+              placeholder="email"
               value={state.email}
               onChange={(e) =>
                 dispatch({
