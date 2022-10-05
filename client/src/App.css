@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+.title {
+  color: hotpink;
+}
+
+.contact-table {
+  padding: 15px;
+  text-align: center;
+}
+
+.contact-list {
+  align-items: center;
+  justify-content: center;
+  background-color: beige;
+}
+
+* {
+  background-image: url("https://static.vecteezy.com/system/resources/previews/003/808/424/non_2x/cute-happy-kawaii-cat-vector.jpg");
+  background-image: no-repeat;
+}

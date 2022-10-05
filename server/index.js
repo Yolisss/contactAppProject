@@ -8,7 +8,7 @@ import bodyParser from "body-Parser";
 import contactsRouter from "./routes/contacts.js";
 
 const app = express();
-const PORT = 8084;
+const PORT = 4042;
 
 app.use(cors());
 

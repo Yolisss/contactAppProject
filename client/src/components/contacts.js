@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useReducer } from "react";
 
+//userReducer used wherever form is
+
 //useReducer good to update multiple items vs useState that updates
 //one item at a time
 //state is how useReducer reads values and stores new value
@@ -44,7 +46,7 @@ const Contacts = ({ setUserToDisplay }) => {
 
   //get individuals data table
   const getContacts = async () => {
-    const response = await fetch(`http://localhost:8084/contacts`);
+    const response = await fetch(`http://localhost:4042/contacts`);
     const data = await response.json();
     console.log(data);
     setContacts(data);
@@ -79,7 +81,7 @@ const Contacts = ({ setUserToDisplay }) => {
     };
     console.log(newContact);
     //New Indiv data will be sent to server and new data will be posted
-    const response = await fetch("http://localhost:8084/contacts", {
+    const response = await fetch("http://localhost:4042/contacts", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -97,7 +99,7 @@ const Contacts = ({ setUserToDisplay }) => {
   //delete individual handler
   const handleDeleteContact = async (deleteId) => {
     //
-    const response = await fetch(`http://localhost:8084/contacts/${deleteId}`, {
+    const response = await fetch(`http://localhost:4042/contacts/${deleteId}`, {
       method: "DELETE",
     });
     await response.json();
@@ -110,76 +112,83 @@ const Contacts = ({ setUserToDisplay }) => {
 
   return (
     <>
-      <header> Contact List </header>
+      <div className="title">
+        <header> Contact List </header>
+        <br></br>
+        <input
+          type="text"
+          placeholder="Search..."
+          className="search"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <br></br>
-      <input
-        type="text"
-        placeholder="Search..."
-        className="search"
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <br></br>
-      <table>
-        <thead>
-          <th>ID: </th>
-          <th>Name: </th>
-          {/* <th>Email: </th>
+      <div className="contact-list">
+        <table>
+          <thead>
+            <th>ID: </th>
+            <th>Name: </th>
+            {/* <th>Email: </th>
           <th>Phone: </th>
           <th>Notes: </th> */}
-        </thead>
-        <tbody>
-          {contacts
-            .filter((val) => {
-              if (searchTerm === "") {
-                return val;
-              } else if (
-                val.name.toLowerCase().includes(searchTerm.toLowerCase())
-              ) {
-                return val;
-              } else if (
-                val.email.toLowerCase().includes(searchTerm.toLowerCase())
-              ) {
-                return val;
-              } else if (val.phone.toString().includes(searchTerm.toString())) {
-                return val;
-              } else if (
-                val.notes
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchTerm.toString().toLowerCase())
-              ) {
-                return val;
-              }
-            })
-            .map((contact, index) => {
-              return (
-                <tr key={index}>
-                  <td>{contact.id}</td>
-                  <td
-                    onClick={() => {
-                      setUserToDisplay(contact);
-                    }}
-                  >
-                    {contact.name}
-                  </td>
-                  {/* <td>{contact.email}</td>
+          </thead>
+          <tbody>
+            {contacts
+              .filter((val) => {
+                if (searchTerm === "") {
+                  return val;
+                } else if (
+                  val.name.toLowerCase().includes(searchTerm.toLowerCase())
+                ) {
+                  return val;
+                } else if (
+                  val.email.toLowerCase().includes(searchTerm.toLowerCase())
+                ) {
+                  return val;
+                } else if (
+                  val.phone.toString().includes(searchTerm.toString())
+                ) {
+                  return val;
+                } else if (
+                  val.notes
+                    .toString()
+                    .toLowerCase()
+                    .includes(searchTerm.toString().toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .map((contact, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{contact.id}</td>
+                    <td
+                      onClick={() => {
+                        setUserToDisplay(contact);
+                      }}
+                    >
+                      {contact.name}
+                    </td>
+                    {/* <td>{contact.email}</td>
                   <td>{contact.phone}</td>
                   <td>{contact.notes}</td> */}
-                  <td>
-                    <button
-                      // src={deleteIcon}
-                      className="trash"
-                      alt="trash"
-                      onClick={() => handleDeleteContact(contact.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+                    <td>
+                      <button
+                        // src={deleteIcon}
+                        className="trash"
+                        alt="trash"
+                        onClick={() => handleDeleteContact(contact.id)}
+                      >
+                        Delete
+                      </button>
+                      <button>Edit</button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
 
       <br></br>
 
